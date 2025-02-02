@@ -59,7 +59,7 @@ class BookingSortingTest extends TestCase
 
         $response->assertStatus(200);
 
-        $bookings = $response->json();
+        $bookings = $response->json('data');
 
         $this->assertTrue(
             strtotime($bookings[0]['created_at']) >
@@ -72,7 +72,7 @@ class BookingSortingTest extends TestCase
         $response = $this->getJson('/api/bookings?sort_by=booking_date&sort_order=asc');
 
         $response->assertStatus(200);
-        $bookings = $response->json();
+        $bookings = $response->json('data');
 
         $this->assertEquals('2024-01-01', $bookings[0]['booking_date']);
         $this->assertEquals('2024-02-15', $bookings[1]['booking_date']);
@@ -84,7 +84,7 @@ class BookingSortingTest extends TestCase
         $response = $this->getJson('/api/bookings?sort_by=booking_date&sort_order=desc');
 
         $response->assertStatus(200);
-        $bookings = $response->json();
+        $bookings = $response->json('data');
 
         $this->assertEquals('2024-03-30', $bookings[0]['booking_date']);
         $this->assertEquals('2024-02-15', $bookings[1]['booking_date']);
@@ -97,7 +97,8 @@ class BookingSortingTest extends TestCase
 
         $response->assertStatus(200);
 
-        $bookings = $response->json();
+        $bookings = $response->json('data');
+
         $this->assertEquals('Alice Smith', $bookings[0]['customer_name']);
         $this->assertEquals('Bob Wilson', $bookings[1]['customer_name']);
         $this->assertEquals('John Doe', $bookings[2]['customer_name']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enum\BookingStatusEnum;
+use App\Events\BookingCreated;
 use App\Excel\BookingsExport;
 use App\Exceptions\SendBookingException;
 use App\Mail\NewBookingNotification;
@@ -126,10 +127,15 @@ class BookingController extends Controller
             DB::beginTransaction();
 
             $booking = Booking::create($validatedData);
-            NewBookingNotification::sendBookingNotification($booking);
+
+            event(new BookingCreated($booking));
 
             DB::commit();
-            return response()->json(['message' => 'Booking created successfully'], 201);
+
+            return response()->json([
+                'message' => 'Booking created successfully',
+                'booking' => $booking
+            ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -137,21 +143,14 @@ class BookingController extends Controller
                 'errors' => $e->errors()
             ], 422);
 
-        } catch (SendBookingException $e) {
-            // El email falló pero la reserva se creó
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Booking created but email notification failed, verify the mail is correct',
-                'warning' => 'email_delivery_failed'
-            ], 500);
-
         } catch (\Exception $e) {
             DB::rollBack();
+
             Log::error('Error in booking creation: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Error creating booking',
-
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -185,14 +184,14 @@ class BookingController extends Controller
 
     public function export()
     {
-        Log::info('Export endpoint hit');  // Agregar log
+
         try {
             return Excel::download(new BookingsExport, 'bookings.csv', \Maatwebsite\Excel\Excel::CSV);
         } catch (\Exception $e) {
             Log::error('Error exporting bookings: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error exporting bookings',
-                'error' => $e->getMessage()  // Agregar el mensaje de error específico
+                'error' => $e->getMessage()
             ], 500);
         }
     }

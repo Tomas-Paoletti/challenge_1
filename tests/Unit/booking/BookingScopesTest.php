@@ -27,7 +27,6 @@ class BookingScopesTest extends TestCase
         $this->tour1 = Tour::factory()->create();
         $this->tour2 = Tour::factory()->create();
 
-        // Crear datos de prueba
         Booking::factory()->create([
             'booking_date' => '2024-01-01',
             'hotel_id' => $this->hotel1->id,

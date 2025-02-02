@@ -45,7 +45,13 @@ class HotelController extends Controller
                     'per_page' => $hotels->perPage(),
                 ]
             ], 200);
-        }catch(\Exception $e){
+        }catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        }
+        catch(\Exception $e){
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }

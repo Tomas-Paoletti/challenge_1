@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Confirmación de Reserva de Tour</title>
+    <title>Tour Booking Confirmation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,19 +42,19 @@
 </head>
 <body>
 <div class="header">
-    <h1>¡Reserva Confirmada!</h1>
+    <h1>Booking Confirmed!</h1>
 </div>
 
 <div class="booking-details">
-    <h2>Detalles de la Reserva</h2>
-    <p><strong>Nombre:</strong> {{ $booking->customer_name }}</p>
+    <h2>Booking Details</h2>
+    <p><strong>Name:</strong> {{ $booking->customer_name }}</p>
     <p><strong>Email:</strong> {{ $booking->customer_email }}</p>
-    <p><strong>Número de Personas:</strong> {{ $booking->number_of_people }}</p>
-    <p><strong>Fecha de Reserva:</strong> {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y H:i') }}</p>
+    <p><strong>Number of People:</strong> {{ $booking->number_of_people }}</p>
+    <p><strong>Booking Date:</strong> {{ \Carbon\Carbon::parse($booking->booking_date)->format('m/d/Y H:i') }}</p>
 </div>
 
 <div class="tour-details">
-    <h2>Detalles del Tour</h2>
+    <h2>Tour Details</h2>
     <p><strong>Tour:</strong> {{ $tour->name }}</p>
     @if($hotel)
         <p><strong>Hotel:</strong> {{ $hotel->name }}</p>
@@ -62,8 +62,8 @@
 </div>
 
 <div class="footer">
-    <p>Gracias por elegir nuestros servicios</p>
-    <p>Si tienes alguna pregunta, no dudes en contactarnos</p>
+    <p>Thank you for choosing our services</p>
+    <p>If you have any questions, please don't hesitate to contact us</p>
 </div>
 </body>
 </html>
